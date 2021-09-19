@@ -7,7 +7,7 @@ import com.todo.service.TodoSortByName;
 
 public class TodoList {
 	private List<TodoItem> list;
-
+	
 	public TodoList() {
 		this.list = new ArrayList<TodoItem>();
 	}
@@ -36,10 +36,9 @@ public class TodoList {
 	}
 
 	public void listAll() {
-		System.out.println("\n"
-				+ "inside list_All method\n");
+		System.out.println("정한 순서대로 출력합니다.");
 		for (TodoItem myitem : list) {
-			System.out.println(myitem.getTitle() + myitem.getDesc());
+			System.out.println("{"+myitem.getTitle()+"} " + myitem.getDesc() +" - "+myitem.getCurrent_date());
 		}
 	}
 	
