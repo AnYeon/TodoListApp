@@ -1,7 +1,9 @@
 package com.todo;
 
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
+import com.todo.dao.TodoItem;
 import com.todo.dao.TodoList;
 import com.todo.menu.Menu;
 import com.todo.service.TodoUtil;
@@ -12,6 +14,7 @@ public class TodoMain {
 	
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
+		
 		boolean isList = false;
 		boolean quit = false;
 		TodoUtil.loadList(l, "todolist.txt");
@@ -20,7 +23,16 @@ public class TodoMain {
 		do {
 			Menu.prompt();
 			isList = false;
-			String choice = sc.next();
+			String choice = sc.nextLine();
+			String keyword="";
+			
+			StringTokenizer str= new StringTokenizer(choice, " ");
+			choice= str.nextToken();
+			if(str.hasMoreTokens()) {
+				keyword = str.nextToken();
+				choice= choice+keyword;
+			}
+			
 			switch (choice) {
 
 			case "add":
@@ -38,7 +50,10 @@ public class TodoMain {
 			case "ls":
 				TodoUtil.listAll(l);
 				break;
-
+				
+			case "ls_cate":
+				TodoUtil.listCate(l);
+				break;
 			case "ls_name_asc":
 				l.sortByName();
 				isList = true;
@@ -55,6 +70,11 @@ public class TodoMain {
 				isList = true;
 				break;
 				
+			case "ls_date_desc":
+				l.sortByDateDesc();
+				isList = true;
+				break;
+				
 			case "help":
 				Menu.displaymenu();
 				break;
@@ -64,7 +84,12 @@ public class TodoMain {
 				break;
 
 			default:
-				System.out.println("정해진 명령을 입력하세요 (명령을 모른다면 help를 입력하세요)");
+				if(choice.equals("find"+keyword))
+					TodoUtil.find(l, keyword);
+				else if(choice.equals("find_cate"+keyword)) 
+					TodoUtil.find_cate(l, keyword);
+				else
+					System.out.println("정해진 명령을 입력하세요 (명령을 모른다면 help를 입력하세요)");
 				break;
 			}
 			

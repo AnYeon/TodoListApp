@@ -9,4 +9,5 @@ public class TodoSortByDate implements Comparator<TodoItem> {
         return o1.getCurrent_date().compareTo(o2.getCurrent_date());
 
     }
+    
 }
