@@ -1,7 +1,8 @@
 package com.todo.dao;
 
-import java.util.Date;
+import java.util.*;
 import java.text.SimpleDateFormat;
+
 
 public class TodoItem {
 	private String category;
@@ -9,8 +10,24 @@ public class TodoItem {
     private String desc;
     private String current_date;
     private String due_date;
+    private int id;
 
-    public TodoItem(String category ,String title, String desc, String due_date){
+    
+    
+    @Override
+	public String toString() {
+		return  id+""+ "["+category+ "]"+"-" + title+"-" +  desc+"-" +  due_date+" " +  current_date;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public TodoItem(String category ,String title, String desc, String due_date){
     	this.category=category;
         this.title=title;
         this.desc=desc;

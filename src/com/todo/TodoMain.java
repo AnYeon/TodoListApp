@@ -7,31 +7,31 @@ import com.todo.dao.TodoItem;
 import com.todo.dao.TodoList;
 import com.todo.menu.Menu;
 import com.todo.service.TodoUtil;
+import com.todo.service.DbConnect;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class TodoMain {
 	
 	public static void start() {
 	
+		
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
+		String filename= "todolist.txt";
+		
+		l.importData(filename);
 		
 		boolean isList = false;
 		boolean quit = false;
-		TodoUtil.loadList(l, "todolist.txt");
+		
 		Menu.displaymenu();
 		
 		do {
 			Menu.prompt();
 			isList = false;
-			String choice = sc.nextLine();
-			String keyword="";
-			
-			StringTokenizer str= new StringTokenizer(choice, " ");
-			choice= str.nextToken();
-			if(str.hasMoreTokens()) {
-				keyword = str.nextToken();
-				choice= choice+keyword;
-			}
+			String choice = sc.next();
 			
 			switch (choice) {
 
@@ -54,25 +54,39 @@ public class TodoMain {
 			case "ls_cate":
 				TodoUtil.listCate(l);
 				break;
-			case "ls_name_asc":
-				l.sortByName();
+				
+			case "ls_name":
+				System.out.println("제목순으로 정렬하였습니다.");
+				TodoUtil.listAll(l, "title", 1);
 				isList = true;
 				break;
 
 			case "ls_name_desc":
-				l.sortByName();
-				l.reverseList();
+				System.out.println("제목역순으로 정렬하였습니다.");
+				TodoUtil.listAll(l, "title", 0);
 				isList = true;
 				break;
 				
 			case "ls_date":
-				l.sortByDate();
+				System.out.println("날짜순으로 정렬하였습니다.");
+				TodoUtil.listAll(l, "due_date", 1);
 				isList = true;
 				break;
 				
 			case "ls_date_desc":
-				l.sortByDateDesc();
+				System.out.println("날짜역순으로 정렬하였습니다.");
+				TodoUtil.listAll(l, "due_date", 0);
 				isList = true;
+				break;
+				
+			case "find":
+				String keyword= sc.nextLine().trim();
+				TodoUtil.findList(l, keyword);
+				break;
+				
+			case "find_cate":
+				String cate= sc.nextLine().trim();
+				TodoUtil.find_cate(l, cate);
 				break;
 				
 			case "help":
@@ -84,17 +98,14 @@ public class TodoMain {
 				break;
 
 			default:
-				if(choice.equals("find"+keyword))
-					TodoUtil.find(l, keyword);
-				else if(choice.equals("find_cate"+keyword)) 
-					TodoUtil.find_cate(l, keyword);
-				else
-					System.out.println("정해진 명령을 입력하세요 (명령을 모른다면 help를 입력하세요)");
+				System.out.println("정해진 명령을 입력하세요 (명령을 모른다면 help를 입력하세요)");
 				break;
 			}
 			
 			if(isList) l.listAll();
 		} while (!quit);
-		TodoUtil.saveList(l, "todolist.txt");
+		DbConnect.closeConnection();
+		sc.close();
+		//TodoUtil.saveList(l, "todolist.txt");
 	}
 }
